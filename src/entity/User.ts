@@ -1,18 +1,43 @@
-import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  BaseEntity,
+  CreateDateColumn,
+  UpdateDateColumn,
+  BeforeInsert,
+} from "typeorm";
+import { v4 as uuidv4 } from "uuid";
 
 @Entity()
-export class User {
+export class User extends BaseEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @PrimaryGeneratedColumn()
-    id: number;
+  @Column()
+  name: string;
 
-    @Column()
-    firstName: string;
+  @Column()
+  email: string;
 
-    @Column()
-    lastName: string;
+  @Column()
+  role: string;
 
-    @Column()
-    age: number;
+  @Column({ type: "uuid" })
+  uuid: string;
 
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @BeforeInsert()
+  createUUID() {
+    this.uuid = uuidv4();
+  }
+
+  toJSON() {
+    return { ...this, id: undefined };
+  }
 }
